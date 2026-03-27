@@ -7,20 +7,30 @@ echo "========================================="
 
 cd /var/www/html
 
-# Create .env from .env.example if it doesn't exist (needed by artisan commands)
+# Create minimal .env (artisan needs this file to exist)
 if [ ! -f .env ]; then
-    echo "[start.sh] .env not found, creating from .env.example..."
-    cp .env.example .env
+    echo "[start.sh] Creating .env..."
+    touch .env
 fi
+
+# Map Railway MySQL variables to Laravel DB variables (if not already set)
+export DB_CONNECTION="${DB_CONNECTION:-mysql}"
+export DB_HOST="${DB_HOST:-$MYSQLHOST}"
+export DB_PORT="${DB_PORT:-${MYSQLPORT:-3306}}"
+export DB_DATABASE="${DB_DATABASE:-$MYSQLDATABASE}"
+export DB_USERNAME="${DB_USERNAME:-$MYSQLUSER}"
+export DB_PASSWORD="${DB_PASSWORD:-$MYSQLPASSWORD}"
+
+# Log to stderr so errors are visible in Railway/Docker logs
+export LOG_CHANNEL="${LOG_CHANNEL:-stderr}"
+
+echo "[start.sh] DB: $DB_CONNECTION @ $DB_HOST:$DB_PORT / $DB_DATABASE (user: $DB_USERNAME)"
 
 # Generate APP_KEY if not set
 if [ -z "$APP_KEY" ]; then
     echo "[start.sh] APP_KEY not set, generating..."
     php artisan key:generate --force
 fi
-
-# Log to stderr so errors are visible in Railway/Docker logs
-export LOG_CHANNEL="${LOG_CHANNEL:-stderr}"
 
 # Set PORT default
 PORT="${PORT:-80}"
