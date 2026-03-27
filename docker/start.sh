@@ -7,6 +7,12 @@ echo "========================================="
 
 cd /var/www/html
 
+# Create .env from .env.example if it doesn't exist (needed by artisan commands)
+if [ ! -f .env ]; then
+    echo "[start.sh] .env not found, creating from .env.example..."
+    cp .env.example .env
+fi
+
 # Generate APP_KEY if not set
 if [ -z "$APP_KEY" ]; then
     echo "[start.sh] APP_KEY not set, generating..."
