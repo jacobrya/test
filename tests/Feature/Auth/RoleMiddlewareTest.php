@@ -10,8 +10,6 @@ class RoleMiddlewareTest extends TestCase
 {
     use RefreshDatabase;
 
-    // --- Admin middleware ---
-
     public function test_admin_can_access_admin_dashboard(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
@@ -38,8 +36,6 @@ class RoleMiddlewareTest extends TestCase
 
         $response->assertStatus(403);
     }
-
-    // --- Specialist middleware ---
 
     public function test_specialist_can_access_specialist_dashboard(): void
     {
@@ -68,8 +64,6 @@ class RoleMiddlewareTest extends TestCase
         $response->assertStatus(403);
     }
 
-    // --- Client middleware ---
-
     public function test_client_can_access_client_dashboard(): void
     {
         $client = User::factory()->create(['role' => 'client']);
@@ -97,16 +91,12 @@ class RoleMiddlewareTest extends TestCase
         $response->assertStatus(403);
     }
 
-    // --- Guest access ---
-
     public function test_guest_cannot_access_any_dashboard(): void
     {
         $this->get('/admin/dashboard')->assertRedirect('/login');
         $this->get('/specialist/dashboard')->assertRedirect('/login');
         $this->get('/client/dashboard')->assertRedirect('/login');
     }
-
-    // --- Generic /dashboard redirect ---
 
     public function test_dashboard_redirects_client_to_client_dashboard(): void
     {

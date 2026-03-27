@@ -29,7 +29,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        /** @var User $user */
         $user = $request->user();
 
         $dashboard = match ($user->role) {

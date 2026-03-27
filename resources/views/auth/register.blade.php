@@ -39,7 +39,6 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <!-- Role -->
         <div class="mt-4">
             <x-input-label for="role" :value="__('I am a')" />
 
