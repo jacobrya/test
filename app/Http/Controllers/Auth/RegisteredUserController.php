@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Specialist;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -15,17 +16,12 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
     public function create(): View
     {
         return view('auth.register');
     }
 
     /**
-     * Handle an incoming registration request.
-     *
      * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
@@ -34,7 +30,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'in:client,specialist'],
+            'role' => ['required', 'in:client,specialist,salon_owner'],
         ]);
 
         $user = User::create([
@@ -43,6 +39,10 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
+
+        if ($user->role === 'specialist') {
+            Specialist::create(['user_id' => $user->id]);
+        }
 
         event(new Registered($user));
 
@@ -54,7 +54,8 @@ class RegisteredUserController extends Controller
     protected function redirectByRole(User $user): string
     {
         return match ($user->role) {
-            'admin' => route('admin.dashboard', absolute: false),
+            'super_admin' => route('super-admin.dashboard', absolute: false),
+            'salon_owner' => route('salon-owner.dashboard', absolute: false),
             'specialist' => route('specialist.dashboard', absolute: false),
             default => route('client.dashboard', absolute: false),
         };

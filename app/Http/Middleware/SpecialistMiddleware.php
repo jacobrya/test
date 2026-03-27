@@ -14,6 +14,16 @@ class SpecialistMiddleware
             abort(403, 'Unauthorized.');
         }
 
+        $specialist = $request->user()->specialist;
+
+        if (! $specialist || ! $specialist->is_approved) {
+            if ($request->routeIs('specialist.pending')) {
+                return $next($request);
+            }
+            return redirect()->route('specialist.pending')
+                ->with('warning', 'Your account is pending approval from salon owner.');
+        }
+
         return $next($request);
     }
 }

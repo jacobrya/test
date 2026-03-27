@@ -1,0 +1,46 @@
+# Dependencies (rebuilt in Docker)
+vendor/
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Tests
+tests/
+phpunit.xml
+
+# IDE / Editor
+.idea/
+.vscode/
+.cursor/
+*.swp
+*.swo
+
+# Docker files (avoid recursion)
+docker-compose*.yml
+
+# Logs & cache (regenerated)
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*.php
+
+# Build artifacts
+public/build/
+public/hot
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docs
+*.md
+LICENSE

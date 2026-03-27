@@ -46,6 +46,7 @@
                 class="block mt-1 w-full border-gray-300 focus:border-[#8B6343] focus:ring-[#8B6343] rounded-md shadow-sm">
                 <option value="client" {{ old('role') === 'client' ? 'selected' : '' }}>Client</option>
                 <option value="specialist" {{ old('role') === 'specialist' ? 'selected' : '' }}>Specialist</option>
+                <option value="salon_owner" {{ old('role') === 'salon_owner' ? 'selected' : '' }}>Salon Owner</option>
             </select>
 
             <x-input-error :messages="$errors->get('role')" class="mt-2" />

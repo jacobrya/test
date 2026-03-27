@@ -13,7 +13,6 @@ class AuthenticationTest extends TestCase
     public function test_login_screen_can_be_rendered(): void
     {
         $response = $this->get('/login');
-
         $response->assertStatus(200);
     }
 
@@ -43,9 +42,9 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('specialist.dashboard', absolute: false));
     }
 
-    public function test_admin_is_redirected_to_admin_dashboard(): void
+    public function test_salon_owner_is_redirected_to_salon_owner_dashboard(): void
     {
-        $user = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create(['role' => 'salon_owner']);
 
         $response = $this->post('/login', [
             'email' => $user->email,
@@ -53,7 +52,20 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('admin.dashboard', absolute: false));
+        $response->assertRedirect(route('salon-owner.dashboard', absolute: false));
+    }
+
+    public function test_super_admin_is_redirected_to_super_admin_dashboard(): void
+    {
+        $user = User::factory()->create(['role' => 'super_admin']);
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('super-admin.dashboard', absolute: false));
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
