@@ -19,6 +19,9 @@ if [ -z "$APP_KEY" ]; then
     php artisan key:generate --force
 fi
 
+# Log to stderr so errors are visible in Railway/Docker logs
+export LOG_CHANNEL="${LOG_CHANNEL:-stderr}"
+
 # Set PORT default
 PORT="${PORT:-80}"
 echo "[start.sh] Listening on port: $PORT"
